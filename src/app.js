@@ -17,7 +17,7 @@ const noteRoutes = require("./routes/noteRoutes");
 const conventionRoutes = require("./routes/conventionRoutes");
 const paiementRoutes = require("./routes/paiementRoutes");
 const depenseRoutes = require("./routes/depenseRoutes");
-const conversationRoutes = require("./routes/conventionRoutes");
+const conversationRoutes = require("./routes/conversationRoutes");
 const superAdminRoutes = require("./routes/superAdminRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const rendezVousRoutes = require("./routes/rendezVousRoutes");
@@ -26,8 +26,17 @@ const { compterRequetes } = require("./middlewares/compteurMiddleware");
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "http://localhost:5174",
+    ],
+  }),
+);
 app.use(express.json());
+app.use("/api", compterRequetes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/api/users", userRoutes);
@@ -47,7 +56,6 @@ app.use("/api/paiements", paiementRoutes);
 app.use("/api/depenses", depenseRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/super-admin", superAdminRoutes);
-app.use("/api", compterRequetes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/rendez-vous", rendezVousRoutes);
 
