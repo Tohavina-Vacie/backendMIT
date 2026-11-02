@@ -68,7 +68,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: MESSAGE_MOT_DE_PASSE });
     }
 
-    if (!["etudiant", "entreprise"].includes(role)) {
+    if (!["etudiant", "entreprise", "enseignant"].includes(role)) {
       return res.status(400).json({
         message: "Rôle invalide pour l'inscription",
       });
@@ -87,6 +87,10 @@ const registerUser = async (req, res) => {
     const donnees = { nom, prenom, email, mot_de_passe: motDePasseHash, role };
     if (role === "etudiant") {
       donnees.numero_etudiant = await genererNumeroEtudiant();
+    }
+    if (role === "enseignant") {
+      // Compte créé désactivé : l'administration l'active après vérification
+      donnees.statut = "inactif";
     }
 
     const user = await User.create(donnees);
